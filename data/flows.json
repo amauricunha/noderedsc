@@ -1,0 +1,26 @@
+[
+    {
+        "id": "nó1",
+        "type": "inject",
+        "payload": "",
+        "topic": "",
+        "repeat": "",
+        "once": false,
+        "wires": [["nó2"]]
+    },
+    {
+        "id": "nó2",
+        "type": "function",
+        "func": "msg.payload = `${msg.payload.username},${new Date().toISOString()}`;\nreturn msg;",
+        "wires": [["nó3"]]
+    },
+    {
+        "id": "nó3",
+        "type": "file",
+        "filename": "/data/logins.csv",
+        "appendNewline": true,
+        "createDir": true,
+        "overwriteFile": false,
+        "wires": []
+    }
+]

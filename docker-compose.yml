@@ -1,0 +1,11 @@
+version: '3'
+services:
+  nodered:
+    image: nodered/node-red:latest
+    ports:
+      - "1880:1880"
+    volumes:
+      - ./data:/data              # Monta o diretório de dados do Node-RED
+      - ./credenciais:/credenciais # Monta o diretório de credenciais do host
+      - ./settings.js:/data/settings.js  # Monta o arquivo settings.js do host
+    restart: unless-stopped
