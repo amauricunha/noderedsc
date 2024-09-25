@@ -25,9 +25,52 @@ if (fs.existsSync(path)) {
 }
 
 module.exports = {
+    // Configuração de autenticação admin utilizando credenciais carregadas do arquivo JSON
     adminAuth: {
         type: "credentials",
         users: users
     },
-    // outras configurações
-}
+    
+    // Captura de tentativas de login para registro no flow do Node-RED
+    httpAdminMiddleware: (req, res, next) => {
+        if (req.url === '/auth/login') {  // Verifica se é uma requisição de login
+            const loginData = {
+                timestamp: new Date().toISOString(),
+                username: req.body.username || 'unknown'
+            };
+            // Enviar os dados de login ao Node-RED via HTTP request
+            const axios = require('axios');
+            axios.post('http://localhost:1880/login-data', loginData)
+                .then(() => next())
+                .catch((err) => next(err));
+        } else {
+            next();
+        }
+    },
+
+    // Outras configurações do Node-RED
+    ui: { path: "/ui" },
+    logging: {
+        console: {
+            level: "info",
+            metrics: false,
+            audit: false
+        }
+    },
+    
+    // Habilitar o fuso horário de São Paulo, Brasil
+    timezone: "America/Sao_Paulo",
+    
+    // Porta de execução do Node-RED
+    uiPort: process.env.PORT || 1880,
+
+    // Caminho onde os fluxos serão armazenados
+    flowFile: 'flows.json',
+
+    // Segurança do editor
+    editorTheme: {
+        projects: {
+            enabled: true
+        }
+    }
+};
