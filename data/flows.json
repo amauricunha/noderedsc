@@ -1,65 +1,26 @@
 [
     {
-        "id": "http-in-node",
-        "type": "http in",
-        "z": "flow",
-        "name": "Capturar Login",
-        "url": "/login-data",
-        "method": "post",
-        "upload": false,
-        "swaggerDoc": "",
-        "x": 200,
-        "y": 100,
-        "wires": [
-            [
-                "csv-node",
-                "http-response-node"
-            ]
-        ]
+        "id": "nó1",
+        "type": "inject",
+        "payload": "",
+        "topic": "",
+        "repeat": "",
+        "once": false,
+        "wires": [["nó2"]]
     },
     {
-        "id": "csv-node",
-        "type": "csv",
-        "z": "flow",
-        "name": "Converter para CSV",
-        "sep": ",",
-        "hdrin": false,
-        "hdrout": true,
-        "multi": "one",
-        "ret": "\\n",
-        "temp": "timestamp,username",
-        "skip": "",
-        "x": 400,
-        "y": 100,
-        "wires": [
-            [
-                "file-node"
-            ]
-        ]
+        "id": "nó2",
+        "type": "function",
+        "func": "msg.payload = `${msg.payload.username},${new Date().toISOString()}`;\nreturn msg;",
+        "wires": [["nó3"]]
     },
     {
-        "id": "file-node",
+        "id": "nó3",
         "type": "file",
-        "z": "flow",
-        "name": "Salvar em CSV",
-        "filename": "/data/login-records.csv",
+        "filename": "/data/logins.csv",
         "appendNewline": true,
-        "createDir": false,
-        "overwriteFile": "false",
-        "encoding": "utf8",
-        "x": 600,
-        "y": 100,
-        "wires": []
-    },
-    {
-        "id": "http-response-node",
-        "type": "http response",
-        "z": "flow",
-        "name": "",
-        "statusCode": "",
-        "headers": {},
-        "x": 400,
-        "y": 200,
+        "createDir": true,
+        "overwriteFile": false,
         "wires": []
     }
 ]
